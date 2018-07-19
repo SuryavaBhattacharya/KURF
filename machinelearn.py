@@ -15,7 +15,7 @@ from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 
 
 def getPCA(arr):
-    pca = PCA(n_components=10)
+    pca = PCA(n_components=20)
     pca.fit(arr)
     pca_data = pca.transform(arr)
     #'''
@@ -42,7 +42,7 @@ def getdata(dataname):
     return labels_ga, features
 
 def crossval(labels,features,algorithm):
-    #features = getPCA(np.nan_to_num(features))
+    features = getPCA(np.nan_to_num(features))
     alpha_num = (0.01, 0.1, 0.5, 1.0, 2.0, 4.0, 5.0, 10.0, 50.0, 100.0)
     DATA_train, DATA_test, LABELS_train, LABELS_test = train_test_split(
         features, labels, test_size=0.1, random_state=42)
@@ -55,7 +55,7 @@ def crossval(labels,features,algorithm):
               'max_iter': np.arange(100,10000,100,dtype=int),
               'tol': np.arange(0.000001,0.001,100)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=5, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=100)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -66,7 +66,7 @@ def crossval(labels,features,algorithm):
         param_grid = {'alpha': np.random.uniform(0.1,100,1000),
               'l1_ratio': np.random.uniform(0,1,1000)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=5, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=100)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -83,7 +83,7 @@ def crossval(labels,features,algorithm):
               'max_iter': np.arange(100,10000,100,dtype=int),
               'tol': np.arange(0.000001,0.001,100)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=5, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=100)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -97,7 +97,7 @@ def crossval(labels,features,algorithm):
               'max_iter': np.arange(100,10000,100,dtype=int),
               'tol': np.arange(0.000001,0.001,100)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=5, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=100)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -111,7 +111,7 @@ def crossval(labels,features,algorithm):
               'max_iter': np.arange(100,10000,100,dtype=int),
               'tol': np.arange(0.000001,0.001,100)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=5, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=100)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -127,7 +127,7 @@ def crossval(labels,features,algorithm):
         param_grid = dict(
             max_depth=depth_range, n_estimators=estimator_range, max_features=feature_range)
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=5, scoring='r2', random_state=42, n_iter=50)
+                                 cv=10, scoring='r2', random_state=42, n_iter=50)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -137,7 +137,7 @@ def crossval(labels,features,algorithm):
         model = Ridge()
         param_grid = {'alpha': np.random.uniform(0.1,100,1000),}
         clf = GridSearchCV(model, param_grid=param_grid,
-                                 cv=5, scoring='r2', return_train_score=True)
+                                 cv=10, scoring='r2', return_train_score=True)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
