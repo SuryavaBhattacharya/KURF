@@ -38,9 +38,16 @@ def triangle(n):
 def meantimes(data_arr,datalabel,labels):
     out = np.zeros([data_arr.shape[3],len(labels)-1])
     for i in range(0,data_arr.shape[3]):
+        try:
+            data=data_arr[:,:,:,i]
+        except:
+            data = data_arr
         for j in labels[1:]:
-            time_arr = data_arr[:,:,:,i]
-            out[i,np.int(j)-1]=np.mean(time_arr[np.where(datalabel==j)])
+            time_arr = data
+            try:
+                out[i,np.int(j)-1]=np.mean(time_arr[np.where(datalabel==j)])
+            except:
+                out[i,np.int(j)-1]=np.mean(time_arr[np.where(datalabel[:,:,:,0]==j)])
     return out
 
 def extractupper(arr):
@@ -64,7 +71,7 @@ def dataextractor(subject,labels):
         return
     else:
         time_avg = meantimes(dataarr,datalabel,labels)
-        fname = '/home/sbh17/Documents/KURFEprime2' + subject + '.txt'
+        fname = '/home/sbh17/Documents/KURFEprime2/' + subject + '.txt'
         np.savetxt(fname, time_avg, delimiter=',')
         return time_avg
         

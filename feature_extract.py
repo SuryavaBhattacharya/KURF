@@ -25,7 +25,27 @@ Directory1 = "C:\\Users\\surya\\OneDrive - King's College London\\KURF\\Data2"
 Directory2 = "C:\\Users\\surya\\OneDrive - King's College London\\KURF\\Data2"
 #'''
 
-
+def labelextractor(sub_id):
+    excl_list=[]
+    count = 0
+    for i in range (0,len(sub_id.iloc[:])):
+        label_file = 'EP' + str(np.int(sub_id.iloc[i])) + '_all_labels.nii.gz'            
+        labelpath = os.path.join(Directory2,label_file)
+        try:
+            datalabel = np.unique(nib.load(labelpath).get_fdata())
+        except FileNotFoundError:
+            message = 'Data for ' + labelpath[labelpath.find("EP"):labelpath.find("EP")+6] + ' missing.'
+            excl_list.append(labelpath[labelpath.find("EP"):labelpath.find("EP")+6])
+            print(message)
+        else: 
+            if len(datalabel)==88:
+                out = datalabel
+                count = count+1
+            else:
+                message2 = 'Data for ' + labelpath[labelpath.find("EP"):labelpath.find("EP")+6] + ' not used.'
+                print(message2)
+                excl_list.append(labelpath[labelpath.find("EP"):labelpath.find("EP")+6])
+    return out,excl_list,count
 
 def triangle(n):
     return 0.5*n*(n+1)
@@ -95,7 +115,7 @@ def corrcov(arr,typedat):
 
 
 def meantimes(subject):
-    fname = Directory2 + '/' + subject + '.txt'
+    fname = Directory2 + '/' + subject + '_mean_time_series.txt'
     return np.loadtxt(fname, delimiter=',')
 
 def dataextractor(subject,labels,typedat):

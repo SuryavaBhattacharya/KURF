@@ -15,7 +15,7 @@ from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 
 
 def getPCA(arr):
-    pca = PCA(n_components=20)
+    pca = PCA(n_components=1)
     pca.fit(arr)
     pca_data = pca.transform(arr)
     #'''
@@ -42,7 +42,8 @@ def getdata(dataname):
     return labels_ga, features
 
 def crossval(labels,features,algorithm):
-    features = getPCA(np.nan_to_num(features))
+    features = np.nan_to_num(features)
+    #features = getPCA(np.nan_to_num(features))
     alpha_num = (0.01, 0.1, 0.5, 1.0, 2.0, 4.0, 5.0, 10.0, 50.0, 100.0)
     DATA_train, DATA_test, LABELS_train, LABELS_test = train_test_split(
         features, labels, test_size=0.1, random_state=42)
@@ -153,25 +154,25 @@ def crossval(labels,features,algorithm):
     
     
         
-'''
+#'''
 labels_ga, features_parcorr = getdata('Partial correlation.csv')
 labels_ga, features_corr = getdata('Correlation.csv')
 labels_ga, features_cov = getdata('Covariance.csv')
-p_corr_paramopti_rf,p_corr_score_rf,p_corr_grid_rf = crossval(labels_ga, features_parcorr, 6)
+#p_corr_paramopti_rf,p_corr_score_rf,p_corr_grid_rf = crossval(labels_ga, features_parcorr, 6)
 p_corr_paramopti_en,p_corr_score_en,p_corr_grid_en = crossval(labels_ga, features_parcorr, 2)
 p_corr_paramopti_ri,p_corr_score_ri,p_corr_grid_ri = crossval(labels_ga, features_parcorr, 7)
 p_corr_paramopti_las,p_corr_score_las,p_corr_grid_las = crossval(labels_ga, features_parcorr, 4)
 #p_corr_paramopti_bay_ri,p_corr_score_bay_ri,p_corr_grid_bay_ri = crossval(labels_ga, features_parcorr, 3)
 #p_corr_paramopti_mult_las,p_corr_score_mult_las,p_corr_grid_mult_las = crossval(labels_ga, features_parcorr, 1)
 p_corr_score_lin = crossval(labels_ga, features_parcorr, 8)
-corr_paramopti_rf,corr_score_rf,corr_grid_rf = crossval(labels_ga, features_corr, 6)
+#corr_paramopti_rf,corr_score_rf,corr_grid_rf = crossval(labels_ga, features_corr, 6)
 corr_paramopti_en,corr_score_en,corr_grid_en = crossval(labels_ga, features_corr, 2)
 corr_paramopti_ri,corr_score_ri,corr_grid_ri = crossval(labels_ga, features_corr, 7)
 corr_paramopti_las,corr_score_las,corr_grid_las = crossval(labels_ga, features_corr, 4)
 #corr_paramopti_bay_ri,corr_score_bay_ri,corr_grid_bay_ri = crossval(labels_ga, features_corr, 3)
 #corr_paramopti_mult_las,corr_score_mult_las,corr_grid_mult_las = crossval(labels_ga, features_corr, 1)
 corr_score_lin = crossval(labels_ga, features_corr, 8)
-cov_paramopti_rf,cov_score_rf,cov_grid_rf = crossval(labels_ga, features_cov, 6)
+#cov_paramopti_rf,cov_score_rf,cov_grid_rf = crossval(labels_ga, features_cov, 6)
 cov_paramopti_en,cov_score_en,cov_grid_en = crossval(labels_ga, features_cov, 2)
 cov_paramopti_ri,cov_score_ri,cov_grid_ri = crossval(labels_ga, features_cov, 7)
 cov_paramopti_las,cov_score_las,cov_grid_las = crossval(labels_ga, features_cov, 4)
@@ -181,7 +182,8 @@ cov_score_lin = crossval(labels_ga, features_cov, 8)
 print('Debug')
 #'''
 labels_ga, features = getdata('Volumes_means.csv')
-paramopti_rf,score_rf,grid_rf = crossval(labels_ga, features, 6)
+#paramopti_rf,score_rf,grid_rf = crossval(labels_ga, features, 6)
 paramopti_en,score_en,p_corr_grid_en = crossval(labels_ga, features, 2)
 paramopti_ri,score_ri,grid_ri = crossval(labels_ga, features, 7)
 paramopti_las,score_las,grid_las = crossval(labels_ga, features, 4)
+score_lin = crossval(labels_ga, features, 8)
