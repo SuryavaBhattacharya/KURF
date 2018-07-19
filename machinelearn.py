@@ -43,7 +43,7 @@ def getdata(dataname):
 
 def crossval(labels,features,algorithm):
     features = np.nan_to_num(features)
-    #features = getPCA(np.nan_to_num(features))
+    features = getPCA(np.nan_to_num(features))
     alpha_num = (0.01, 0.1, 0.5, 1.0, 2.0, 4.0, 5.0, 10.0, 50.0, 100.0)
     DATA_train, DATA_test, LABELS_train, LABELS_test = train_test_split(
         features, labels, test_size=0.1, random_state=42)
