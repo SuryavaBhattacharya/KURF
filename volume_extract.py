@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from scipy import stats, linalg
 from sklearn.covariance import GraphLassoCV
 from itertools import product
+from functools import reduce
 #import nilearn
 
 #Uncomment on the work PC:

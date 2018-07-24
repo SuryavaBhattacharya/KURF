@@ -10,12 +10,16 @@ from sklearn.covariance import GraphLassoCV
 #import nilearn
 
 def labelextractor(sub_id):
+    #initialise arrays
     excl_list=[]
     count = 0
+    #loop through all label files to find all the subjects that have data for all the labelled
+    #rois in the brain
     for i in range (0,len(sub_id.iloc[:])):
         label_file = 'EP' + str(np.int(sub_id.iloc[i])) + '_all_labels.nii.gz'            
         labelpath = os.path.join(Directory2,label_file)
         try:
+            #find all the numbered labels:
             datalabel = np.unique(nib.load(labelpath).get_fdata())
         except FileNotFoundError:
             message = 'Data for ' + labelpath[labelpath.find("EP"):labelpath.find("EP")+6] + ' missing.'
@@ -31,24 +35,29 @@ def labelextractor(sub_id):
                 excl_list.append(labelpath[labelpath.find("EP"):labelpath.find("EP")+6])
     return out,excl_list,count
 
-
+#calculate the triangle numbers:
 def triangle(n):
     return 0.5*n*(n+1)
 
+#obtain the time average series for each subject:
 def meantimes(data_arr,datalabel,labels):
+    #initiate the array:
     out = np.zeros([data_arr.shape[3],len(labels)-1])
+    #loop through and fill array:
     for i in range(0,data_arr.shape[3]):
         for j in labels[1:]:
             time_arr = data_arr[:,:,:,i]
             out[i,np.int(j)-1]=np.mean(time_arr[np.where(datalabel==j)])
     return out
 
+#extract the upper matrix minus the diagonals of a matrix and vectorise: 
 def extractupper(arr):
     out = np.array([])
     for i in range(0, arr.shape[0]):
         out = np.concatenate([out, arr[i, i+1:]])
     return out
-        
+
+#calculate the partial correlation using Python version of Matlab's equations:        
 def partialcorr(arr):
     C = np.asarray(arr)
     p = C.shape[1]
@@ -70,6 +79,8 @@ def partialcorr(arr):
             P_corr[j, i] = corr
     return P_corr
 
+
+#obtain the connectivity matrix:
 def corrcov(arr,typedat):
     #eng = matlab.engine.start_matlab()
     #out = eng.partialcorr(matlab.double(arr.tolist()))
@@ -105,7 +116,7 @@ def corrcov(arr,typedat):
     return out
     
 
-
+#create the database for all subjects:
 def dataextractor(subject,labels,typedat):
     rsfmri_file = subject + '_clean_rest_to_T2.nii.gz'
     filepath = os.path.join(Directory2,rsfmri_file)
@@ -136,11 +147,14 @@ Directory1 = "C:\\Users\\surya\\OneDrive - King's College London\\KURF\\Data2"
 Directory2 = "C:\\Users\\surya\\OneDrive - King's College London\\KURF\\Data2"
 #'''
 
+
+#create the dataframe:
 def dataframeextract(typedat):
     file_sub_csv = os.path.join(Directory2,'eprime_INFO.csv')
     subs = pd.read_csv(file_sub_csv, sep = ',')
     sub_id = subs.iloc[:,0]
     sub_id = sub_id.dropna(axis=0)
+    #obtain the label arrays for all of the subjects and the subjects with missing data:
     labels,excl_list,count = labelextractor(sub_id)
     ind1 = triangle(len(labels)-2)
     feat_set = np.empty((count,np.int(ind1)))
