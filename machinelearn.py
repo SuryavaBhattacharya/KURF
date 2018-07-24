@@ -52,8 +52,8 @@ def getdata(dataname):
     #'''
     features_pma = database['Age at scan'][:].as_matrix()-np.mean(database['Age at scan'][:].as_matrix())
     features = database.iloc[:, 5:].as_matrix()
-    features = np.concatenate((features_pma.reshape(features_pma.shape[0], 1), features), axis=1)
-    #'''
+    #features = np.concatenate((features_pma.reshape(features_pma.shape[0], 1), features), axis=1)
+    '''
     labels_ga=np.array(labels_ga)
     labels_ga = labels_ga[np.where(np.abs(features_pma)<6)]
     features = features[np.where(np.abs(features_pma)<6)]
