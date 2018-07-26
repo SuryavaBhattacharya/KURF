@@ -43,6 +43,21 @@ def getPCA(arr):
     #'''
     return pca_data
 
+def exclude_data(database):
+    f = open('eprime_pathology.txt')
+    patho = f.read().split('\n')
+    f.close()
+    f = open('eprime_poor_seg.txt')
+    poor_seg = f.read().split('\n')
+    f.close()
+    f = open('eprimeonly_motion.txt')
+    motion = f.read().split('\n')
+    f.close()
+    for i in patho:
+        sub_patho = i.split('\t')
+    
+
+
 def getdata(dataname):
     #get the database for machine learning:
     directory = "C:\\Users\\surya\\OneDrive - King's College London\\KURF"
@@ -82,13 +97,13 @@ def crossval(labels,features,algorithm):
     
     if algorithm == 1:
         model = MultiTaskLasso() 
-        param_grid = {'alpha': np.random.uniform(0.1,100,100),
+        param_grid = {'alpha': np.random.uniform(0.1,100,1000),
               'fit_intercept': [True, False],
               'normalize': [True, False],
               'max_iter': np.linspace(100,10000,num=50,dtype=int),
               'tol': np.linspace(0.000001,0.001,num=50)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=10, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=1000)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -124,13 +139,13 @@ def crossval(labels,features,algorithm):
         return paramopti, score, score_grid     
     elif algorithm == 4:
         model = Lasso()
-        param_grid = {'alpha': np.random.uniform(0.1,100,100),
+        param_grid = {'alpha': np.random.uniform(0.1,100,1000),
               'fit_intercept': [True, False],
               'normalize': [True, False],
               'max_iter': np.linspace(100,10000,num=50,dtype=int),
               'tol': np.linspace(0.000001,0.001,num=50)}
         clf = RandomizedSearchCV(model, param_distributions=param_grid,
-                                 cv=10, scoring='r2', random_state=42, n_iter=100)
+                                 cv=10, scoring='r2', random_state=42, n_iter=1000)
         clf.fit(DATA_train, LABELS_train)
         paramopti = clf.best_params_
         score = clf.best_score_
@@ -229,7 +244,7 @@ print('Debug')
 
 labels_ga, features = getdata('Volumes.csv')
 #'''
-#paramopti_rf,score_rf,grid_rf = crossval(labels_ga, features, 6)
+paramopti_rf,score_rf,grid_rf = crossval(labels_ga, features, 6)
 paramopti_en,score_en,p_corr_grid_en = crossval(labels_ga, features, 2)
 paramopti_ri,score_ri,grid_ri = crossval(labels_ga, features, 7)
 paramopti_las,score_las,grid_las = crossval(labels_ga, features, 4)
